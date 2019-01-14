@@ -1,31 +1,36 @@
 class Api::V1::PuzzleProxyController < ApplicationController
+  skip_before_action :authorized
+  
   def wsj
     date = params[:date]
-    file_name = "wsj#{date}.puz"
-    f_client = Faraday.new('http://herbach.dnsalias.com') do |client|
-      client.request :url_encoded
-      client.adapter Faraday.default_adapter
-    end
-    response = f_client.public_send(:get, "/wsj/#{file_name}")
+    filename = "wsj#{date}.puz"
+    response = HerbachAPI::ApiClient.get_wsj(filename)
     if response.success?
-      send_data response.body, filename: file_name, type: 'application/x-crossword'
+      send_data response.body, filename: filename, type: 'application/x-crossword'
     else
-      render json: { message: "Error loading puzzle" }, status: response.status
+      render json: { message: "Puzzle not found" }, status: response.status
     end
   end
 
   def wapo
     date = params[:date]
-    file_name = "wp#{date}.puz"
-    f_client = Faraday.new('http://herbach.dnsalias.com') do |client|
-      client.request :url_encoded
-      client.adapter Faraday.default_adapter
-    end
-    response = f_client.public_send(:get, "/WaPo/#{file_name}")
+    filename = "wp#{date}.puz"
+    response = HerbachAPI::ApiClient.get_wapo(filename)
     if response.success?
-      send_data response.body, filename: file_name, type: 'application/x-crossword'
+      send_data response.body, filename: filename, type: 'application/x-crossword'
     else
-      render json: { message: "Error loading puzzle" }, status: response.status
+      render json: { message: "Puzzle not found" }, status: response.status
+    end
+  end
+
+  def ps
+    date = params[:date]
+    filename = "ps#{date}.puz"
+    response = HerbachAPI::ApiClient.get_ps(filename)
+    if response.success?
+      send_data response.body, filename: filename, type: 'application/x-crossword'
+    else
+      render json: { message: "Puzzle not found" }, status: response.status
     end
   end
 end
