@@ -5,12 +5,7 @@ class Api::V1::PuzzlesController < ApplicationController
   def create
     @puzzle = @user.puzzles.find_by(title: params[:puzzle][:title])
     if @puzzle
-      @puzzle.update(puzzle_params)
-      if @puzzle.valid? 
-        render body: nil, status: :no_content
-      else
-        render json: { errors: @puzzle.errors.full_messages }, status: :unprocessable_entity
-      end
+      render json: @puzzle
     else
       @puzzle = @user.puzzles.create(puzzle_params)
       if @puzzle.valid? 
@@ -41,7 +36,7 @@ class Api::V1::PuzzlesController < ApplicationController
     if @puzzle
       @puzzle.update(puzzle_params)
       if @puzzle.valid? 
-        render body: nil, status: :no_content
+        render json: @puzzle, status: :ok
       else
         render json: { errors: @puzzle.errors.full_messages }, status: :unprocessable_entity
       end

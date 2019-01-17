@@ -1,6 +1,7 @@
 class Api::V1::PuzzleProxyController < ApplicationController
   skip_before_action :authorized
-  
+
+  # MON-SAT
   def wsj
     date = params[:date]
     filename = "wsj#{date}.puz"
@@ -12,6 +13,7 @@ class Api::V1::PuzzleProxyController < ApplicationController
     end
   end
 
+  # SUN
   def wapo
     date = params[:date]
     filename = "wp#{date}.puz"
@@ -26,6 +28,18 @@ class Api::V1::PuzzleProxyController < ApplicationController
   def ps
     date = params[:date]
     filename = "ps#{date}.puz"
+    response = HerbachAPI::ApiClient.get_ps(filename)
+    if response.success?
+      send_data response.body, filename: filename, type: 'application/x-crossword'
+    else
+      render json: { message: "Puzzle not found" }, status: response.status
+    end
+  end
+
+  # THU
+  def jonesin
+    date = params[:date]
+    filename = "jz#{date}.puz"
     response = HerbachAPI::ApiClient.get_ps(filename)
     if response.success?
       send_data response.body, filename: filename, type: 'application/x-crossword'

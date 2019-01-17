@@ -23,6 +23,13 @@ module HerbachAPI
       )
     end
 
+    def self.get_jonesin(filename)
+      self.request(
+        http_method: :get,
+        endpoint: "/Jonesin/#{filename}"
+      )
+    end
+
     private
 
     def self.client
