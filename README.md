@@ -1,24 +1,11 @@
-# README
+# react-ipuz-api
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Backend for [react-ipuz](https://github.com/ihollander/react-ipuz)
 
-Things you may want to cover:
+To start, run:
 
-* Ruby version
+`bundle install`
+`rails db:create && rails db:migrate`
+`rails s -p 4000`
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+See [react-ipuz](https://github.com/ihollander/react-ipuz) readme for additional details.
