@@ -2,12 +2,12 @@
 
 Backend for [react-ipuz](https://github.com/ihollander/react-ipuz)
 
-To start, run:
+To start the server:
 
 `bundle install`
 
 `rails db:create && rails db:migrate`
 
-`rails s -p 4000`
+`rails s`
 
 See [react-ipuz](https://github.com/ihollander/react-ipuz) readme for additional details.
