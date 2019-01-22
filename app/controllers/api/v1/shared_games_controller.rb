@@ -38,7 +38,7 @@ class Api::V1::SharedGamesController < ApplicationController
       position: position,
       user: @user
     }
-    game = SharedGame.find_by(id: params[:shared_game_id])
+    game = Game.find_by(id: params[:shared_game_id])
     SharedGamesChannel.broadcast_to(game, {type: 'UPDATE_POSITION', payload: response})
   end
 

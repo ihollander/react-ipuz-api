@@ -10,27 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_16_170853) do
+ActiveRecord::Schema.define(version: 2019_01_22_183605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "puzzles", force: :cascade do |t|
-    t.string "title"
-    t.string "ipuz"
-    t.string "cells"
+  create_table "games", force: :cascade do |t|
+    t.bigint "host_id"
+    t.bigint "guest_id"
+    t.string "puzzle"
     t.integer "timer"
-    t.bigint "user_id"
+    t.float "solved"
+    t.boolean "active"
+    t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_puzzles_on_user_id"
-  end
-
-  create_table "shared_games", force: :cascade do |t|
-    t.bigint "puzzle_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["puzzle_id"], name: "index_shared_games_on_puzzle_id"
+    t.boolean "host_active"
+    t.boolean "guest_active"
+    t.index ["guest_id"], name: "index_games_on_guest_id"
+    t.index ["host_id"], name: "index_games_on_host_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -40,4 +38,6 @@ ActiveRecord::Schema.define(version: 2019_01_16_170853) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "games", "users", column: "guest_id"
+  add_foreign_key "games", "users", column: "host_id"
 end
