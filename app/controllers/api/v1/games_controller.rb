@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::GamesController < ApplicationController
-  before_action :find_game, only: %i[show update join pause mark_active mark_inactive]
+  before_action :find_game, only: %i[show update destroy join pause mark_active mark_inactive]
 
   # POST /games
   def create
@@ -47,6 +47,14 @@ class Api::V1::GamesController < ApplicationController
       end
     else
       render json: { message: 'Not found' }, status: :not_found
+    end
+  end
+
+  # DELETE /games/:id
+  def destroy
+    if @game
+      @game.destroy
+      update_lobby('GAME_REMOVED', {id: params[:id]})
     end
   end
 
@@ -176,6 +184,30 @@ class Api::V1::GamesController < ApplicationController
       })
       payload = ActiveModelSerializers::Adapter::Json.new(
         GameSmallSerializer.new(@game)
+      ).serializable_hash
+      update_lobby('GAME_UPDATED', payload)
+    end
+  end
+
+  # patch /games/leave_all
+  def leave_all
+    @user.host_games.where(host_active: true).each do |game|
+      game.update(host_active: false)
+      broadcast_payload(game.id, 'GUEST_INACTIVE', {
+        user: @user
+      })
+      payload = ActiveModelSerializers::Adapter::Json.new(
+        GameSmallSerializer.new(game)
+      ).serializable_hash
+      update_lobby('GAME_UPDATED', payload)
+    end
+    @user.guest_games.where(guest_active: true).each do |game|
+      game.update(guest_active: false)
+      broadcast_payload(game.id, 'GUEST_INACTIVE', {
+        user: @user
+      })
+      payload = ActiveModelSerializers::Adapter::Json.new(
+        GameSmallSerializer.new(game)
       ).serializable_hash
       update_lobby('GAME_UPDATED', payload)
     end

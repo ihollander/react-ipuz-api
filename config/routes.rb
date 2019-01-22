@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       resources :users, only: [:create]
       post '/login', to: 'auth#create'
 
-      resources :games, only: [:show, :create, :index, :update] do
+      resources :games, only: [:show, :create, :index, :update, :destroy] do
         member do
           patch 'join'
           patch 'update_cell'
@@ -16,6 +16,9 @@ Rails.application.routes.draw do
           patch 'unpause'
           patch 'mark_active'
           patch 'mark_inactive'
+        end
+        collection do
+          patch 'leave_all'
         end
       end
 
