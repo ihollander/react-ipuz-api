@@ -29,6 +29,7 @@ class Api::V1::GamesController < ApplicationController
   # GET /games/:id
   def show
     if @game
+      @game.set_user_active(@user, true)
       render json: @game
     else
       render json: { message: 'Not found' }, status: :not_found
@@ -144,74 +145,74 @@ class Api::V1::GamesController < ApplicationController
   end
 
   # PATCH /games/:id/mark_active
-  def mark_active
-    if @user == @game.host
-      @game.update(host_active: true)
-      broadcast_payload(params[:id], 'HOST_ACTIVE', {
-        user: @user
-      })
-      payload = ActiveModelSerializers::Adapter::Json.new(
-        GameSmallSerializer.new(@game)
-      ).serializable_hash
-      update_lobby('GAME_UPDATED', payload)
-    elsif @user == @game.guest
-      @game.update(guest_active: true)
-      broadcast_payload(params[:id], 'GUEST_ACTIVE', {
-        user: @user
-      })
-      payload = ActiveModelSerializers::Adapter::Json.new(
-        GameSmallSerializer.new(@game)
-      ).serializable_hash
-      update_lobby('GAME_UPDATED', payload)
-    end
-  end
+  # def mark_active
+  #   if @user == @game.host
+  #     @game.update(host_active: true)
+  #     broadcast_payload(params[:id], 'HOST_ACTIVE', {
+  #       user: @user
+  #     })
+  #     payload = ActiveModelSerializers::Adapter::Json.new(
+  #       GameSmallSerializer.new(@game)
+  #     ).serializable_hash
+  #     update_lobby('GAME_UPDATED', payload)
+  #   elsif @user == @game.guest
+  #     @game.update(guest_active: true)
+  #     broadcast_payload(params[:id], 'GUEST_ACTIVE', {
+  #       user: @user
+  #     })
+  #     payload = ActiveModelSerializers::Adapter::Json.new(
+  #       GameSmallSerializer.new(@game)
+  #     ).serializable_hash
+  #     update_lobby('GAME_UPDATED', payload)
+  #   end
+  # end
 
   # PATCH /games/:id/mark_inactive
-  def mark_inactive
-    if @user == @game.host
-      @game.update(host_active: false)
-      broadcast_payload(params[:id], 'HOST_INACTIVE', {
-        user: @user
-      })
-      payload = ActiveModelSerializers::Adapter::Json.new(
-        GameSmallSerializer.new(@game)
-      ).serializable_hash
-      update_lobby('GAME_UPDATED', payload)
-    elsif @user == @game.guest
-      @game.update(guest_active: false)
-      broadcast_payload(params[:id], 'GUEST_INACTIVE', {
-        user: @user
-      })
-      payload = ActiveModelSerializers::Adapter::Json.new(
-        GameSmallSerializer.new(@game)
-      ).serializable_hash
-      update_lobby('GAME_UPDATED', payload)
-    end
-  end
+  # def mark_inactive
+  #   if @user == @game.host
+  #     @game.update(host_active: false)
+  #     broadcast_payload(params[:id], 'HOST_INACTIVE', {
+  #       user: @user
+  #     })
+  #     payload = ActiveModelSerializers::Adapter::Json.new(
+  #       GameSmallSerializer.new(@game)
+  #     ).serializable_hash
+  #     update_lobby('GAME_UPDATED', payload)
+  #   elsif @user == @game.guest
+  #     @game.update(guest_active: false)
+  #     broadcast_payload(params[:id], 'GUEST_INACTIVE', {
+  #       user: @user
+  #     })
+  #     payload = ActiveModelSerializers::Adapter::Json.new(
+  #       GameSmallSerializer.new(@game)
+  #     ).serializable_hash
+  #     update_lobby('GAME_UPDATED', payload)
+  #   end
+  # end
 
   # patch /games/leave_all
-  def leave_all
-    @user.host_games.where(host_active: true).each do |game|
-      game.update(host_active: false)
-      broadcast_payload(game.id, 'GUEST_INACTIVE', {
-        user: @user
-      })
-      payload = ActiveModelSerializers::Adapter::Json.new(
-        GameSmallSerializer.new(game)
-      ).serializable_hash
-      update_lobby('GAME_UPDATED', payload)
-    end
-    @user.guest_games.where(guest_active: true).each do |game|
-      game.update(guest_active: false)
-      broadcast_payload(game.id, 'GUEST_INACTIVE', {
-        user: @user
-      })
-      payload = ActiveModelSerializers::Adapter::Json.new(
-        GameSmallSerializer.new(game)
-      ).serializable_hash
-      update_lobby('GAME_UPDATED', payload)
-    end
-  end
+  # def leave_all
+  #   @user.host_games.where(host_active: true).each do |game|
+  #     game.update(host_active: false)
+  #     broadcast_payload(game.id, 'HOST_INACTIVE', {
+  #       user: @user
+  #     })
+  #     payload = ActiveModelSerializers::Adapter::Json.new(
+  #       GameSmallSerializer.new(game)
+  #     ).serializable_hash
+  #     update_lobby('GAME_UPDATED', payload)
+  #   end
+  #   @user.guest_games.where(guest_active: true).each do |game|
+  #     game.update(guest_active: false)
+  #     broadcast_payload(game.id, 'GUEST_INACTIVE', {
+  #       user: @user
+  #     })
+  #     payload = ActiveModelSerializers::Adapter::Json.new(
+  #       GameSmallSerializer.new(game)
+  #     ).serializable_hash
+  #     update_lobby('GAME_UPDATED', payload)
+  #   end
+  # end
 
   private
 

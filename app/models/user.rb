@@ -4,4 +4,10 @@ class User < ApplicationRecord
 
   has_secure_password
   validates :username, uniqueness: { case_sensitive: false }
+
+  def actioncable_serialize
+    ActiveModelSerializers::Adapter::Json.new(
+      UserSerializer.new(self)
+    ).serializable_hash
+  end
 end

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       post '/login', to: 'auth#create'
 
       resources :games, only: [:show, :create, :index, :update, :destroy] do
+        resources :messages, only: [:index, :create]
         member do
           patch 'join'
           patch 'update_cell'

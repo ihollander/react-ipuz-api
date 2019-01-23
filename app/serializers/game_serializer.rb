@@ -3,4 +3,5 @@ class GameSerializer < ActiveModel::Serializer
 
   has_one :host, key: :host_id
   has_one :guest, key: :guest_id
+  has_many :messages
 end
