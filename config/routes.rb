@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:create]
+      patch '/profile', to: 'users#profile'
       post '/login', to: 'auth#create'
 
       resources :games, only: [:show, :create, :index, :update, :destroy] do
