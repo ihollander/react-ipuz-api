@@ -12,9 +12,20 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # PATCH /users
+  def profile
+    @user.update(user_params)
+    if @user.valid?
+      @token = encode_token(user_id: @user.id)
+      render json: @user, status: :ok
+    else
+      render json: { message: 'Error updating user' }, status: :not_acceptable
+    end
+  end
+
   private
 
   def user_params
-    params.require(:user).permit(:username, :password, :password_confirmation)
+    params.require(:user).permit(:username, :password, :password_confirmation, :avatar)
   end
 end

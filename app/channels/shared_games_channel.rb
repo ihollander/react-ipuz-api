@@ -1,6 +1,6 @@
 class SharedGamesChannel < ApplicationCable::Channel
   def subscribed
-    game = SharedGame.find_by(id: params[:id])
+    game = Game.find_by(id: params[:id])
     stream_for game
   end
 

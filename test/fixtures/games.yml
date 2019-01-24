@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  puzzle: MyString
+  timer: 1
+  solved: 1.5
+  active: false
+  title: MyString
+
+two:
+  user: two
+  puzzle: MyString
+  timer: 1
+  solved: 1.5
+  active: false
+  title: MyString
