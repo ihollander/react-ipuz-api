@@ -30,7 +30,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'rack-cors'
 
 # for...serializing
-gem 'active_model_serializers'
+gem 'active_model_serializers', '~> 0.10.0'
 
 # httpclient for API request handling
 gem 'faraday'
