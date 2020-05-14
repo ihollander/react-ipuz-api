@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::API
   before_action :authorized
 
+  def wakey_wakey
+    render json: { message: "ok" }
+  end
+
   def encode_token(payload)
     JWT.encode(payload, Rails.application.credentials.secret_key_base)
   end
