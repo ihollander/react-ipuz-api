@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: "application#wakey_wakey"
   
   namespace :api do
     namespace :v1 do
